@@ -31,7 +31,7 @@ application :
     , view : model -> Document msg
     , update : msg -> model -> ( model, Cmd msg, Maybe (RouteChange route) )
     , subscriptions : model -> Sub msg
-    , routeChange : route -> msg
+    , stepUrl : route -> model -> ( model, Cmd msg, Maybe (RouteChange route) )
     , routeToString : route -> String
     , urlToRoute : Url -> route
     }
@@ -77,7 +77,7 @@ update :
     { a
         | update : msg -> model -> ( model, Cmd msg, Maybe (RouteChange route) )
         , urlToRoute : Url -> route
-        , routeChange : route -> msg
+        , stepUrl : route -> model -> ( model, Cmd msg, Maybe (RouteChange route) )
         , routeToString : route -> String
     }
     -> Msg msg
@@ -102,7 +102,7 @@ update app msg (Model key model) =
                     )
 
         UrlChanged url ->
-            app.update (app.routeChange (app.urlToRoute url)) model
+            app.stepUrl (app.urlToRoute url) model
                 |> toUpdate key app.routeToString
 
 
